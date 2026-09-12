@@ -1,0 +1,493 @@
+{
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+background: #080808;
+color: white;
+font-family: Arial, Helvetica, sans-serif;
+min-height: 100vh;
+}
+
+.register-page {
+min-height: 100vh;
+padding: 35px 50px;
+}
+
+.brand {
+font-size: 24px;
+font-weight: 900;
+letter-spacing: 7px;
+}
+
+.register-container {
+width: min(560px, 92vw);
+margin: 40px auto 80px;
+}
+
+.register-header {
+text-align: center;
+margin-bottom: 40px;
+}
+
+.small-text {
+color: #666;
+font-size: 9px;
+letter-spacing: 5px;
+margin-bottom: 15px;
+}
+
+.register-header h1 {
+font-size: 42px;
+letter-spacing: 6px;
+}
+
+.register-header p {
+color: #555;
+font-size: 10px;
+letter-spacing: 2px;
+margin-top: 12px;
+}
+
+.input-group {
+margin-bottom: 25px;
+}
+
+.input-group label {
+display: block;
+color: #777;
+font-size: 9px;
+letter-spacing: 3px;
+margin-bottom: 9px;
+}
+
+.input-group input {
+width: 100%;
+height: 48px;
+padding: 0 15px;
+background: #0e0e0e;
+border: 1px solid #292929;
+color: white;
+outline: none;
+font-size: 12px;
+letter-spacing: 1px;
+}
+
+.input-group input:focus {
+border-color: #777;
+}
+
+.input-group input::placeholder {
+color: #3e3e3e;
+}
+
+.password-wrapper {
+position: relative;
+}
+
+.password-wrapper input {
+padding-right: 75px;
+}
+
+.show-password {
+position: absolute;
+right: 8px;
+top: 8px;
+height: 32px;
+padding: 0 10px;
+background: transparent;
+border: 1px solid #333;
+color: #777;
+font-size: 8px;
+letter-spacing: 2px;
+cursor: pointer;
+}
+
+.show-password:hover {
+background: white;
+color: black;
+}
+
+.password-counter {
+margin-top: 7px;
+color: #555;
+font-size: 9px;
+letter-spacing: 2px;
+text-align: right;
+}
+
+.password-status {
+margin-top: 7px;
+color: #555;
+font-size: 8px;
+letter-spacing: 2px;
+}
+
+.field-status {
+margin-top: 7px;
+color: #555;
+font-size: 8px;
+letter-spacing: 1px;
+}
+
+/* CAPTCHA */
+
+.captcha-section {
+margin-top: 35px;
+padding: 25px;
+border: 1px solid #242424;
+background: #0b0b0b;
+}
+
+.captcha-title {
+font-size: 9px;
+color: #777;
+letter-spacing: 4px;
+}
+
+.captcha-question {
+margin-top: 12px;
+font-size: 19px;
+font-weight: 800;
+letter-spacing: 3px;
+}
+
+.captcha-instruction {
+margin-top: 10px;
+color: #555;
+font-size: 8px;
+letter-spacing: 1.5px;
+line-height: 1.7;
+}
+
+/* FLOWER */
+
+.flower-area {
+height: 300px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.flower {
+width: 180px;
+height: 180px;
+position: relative;
+}
+
+.petal {
+position: absolute;
+width: 75px;
+height: 105px;
+left: 52px;
+top: 37px;
+background: #181818;
+border: 2px solid #444;
+
+border-radius: 50% 50% 45% 45%;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+cursor: pointer;
+
+transition:
+    transform 0.2s,
+    background 0.2s,
+    border 0.2s;
+    }
+
+.petal span {
+font-size: 8px;
+letter-spacing: 1px;
+color: #777;
+transform: rotate(0deg);
+pointer-events: none;
+}
+
+.petal-1 {
+transform: rotate(0deg) translateY(-55px);
+}
+
+.petal-2 {
+transform: rotate(60deg) translateY(-55px);
+}
+
+.petal-3 {
+transform: rotate(120deg) translateY(-55px);
+}
+
+.petal-4 {
+transform: rotate(180deg) translateY(-55px);
+}
+
+.petal-5 {
+transform: rotate(240deg) translateY(-55px);
+}
+
+.petal-6 {
+transform: rotate(300deg) translateY(-55px);
+}
+
+.petal:hover {
+border-color: white;
+}
+
+.flower-center {
+position: absolute;
+width: 58px;
+height: 58px;
+left: 61px;
+top: 61px;
+border-radius: 50%;
+
+background: #111;
+border: 2px solid #666;
+
+display: flex;
+justify-content: center;
+align-items: center;
+
+z-index: 5;
+}
+
+.flower-center span {
+font-size: 22px;
+color: #777;
+}
+
+/* COLORS */
+
+.color-palette {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+justify-content: center;
+margin-top: 20px;
+}
+
+.color-button {
+min-width: 85px;
+padding: 10px;
+background: transparent;
+color: white;
+
+border: 1px solid #333;
+
+font-size: 8px;
+font-weight: bold;
+letter-spacing: 2px;
+
+cursor: pointer;
+}
+
+.color-button:hover,
+.color-button.selected {
+background: white;
+color: black;
+}
+
+.color-button.red {
+border-color: #8c3030;
+}
+
+.color-button.blue {
+border-color: #315d91;
+}
+
+.color-button.yellow {
+border-color: #9a8a32;
+}
+
+.color-button.green {
+border-color: #3d783f;
+}
+
+.color-button.purple {
+border-color: #713f8d;
+}
+
+.color-button.orange {
+border-color: #a4612d;
+}
+
+.selected-color {
+text-align: center;
+color: #555;
+font-size: 8px;
+letter-spacing: 2px;
+}
+
+.selected-color strong {
+color: white;
+}
+
+.captcha-status {
+text-align: center;
+margin-top: 15px;
+color: #555;
+font-size: 8px;
+letter-spacing: 2px;
+}
+
+/* SIGN IN */
+
+.sign-in-button {
+width: 100%;
+height: 52px;
+margin-top: 30px;
+
+background: white;
+color: black;
+
+border: none;
+
+font-size: 10px;
+font-weight: bold;
+letter-spacing: 4px;
+
+cursor: pointer;
+
+transition: 0.2s;
+}
+
+.sign-in-button:disabled {
+background: #1d1d1d;
+color: #444;
+cursor: not-allowed;
+}
+
+.sign-in-button:not(:disabled):hover {
+background: #ccc;
+letter-spacing: 6px;
+}
+
+/* POPUPS */
+
+.popup-overlay {
+position: fixed;
+inset: 0;
+background: rgba(0, 0, 0, 0.94);
+
+display: none;
+
+justify-content: center;
+align-items: center;
+
+z-index: 99999;
+}
+
+.popup-box {
+width: min(460px, 90vw);
+padding: 40px 30px;
+
+background: #0b0b0b;
+
+border: 1px solid #444;
+
+text-align: center;
+}
+
+.popup-warning {
+color: #666;
+font-size: 8px;
+letter-spacing: 5px;
+margin-bottom: 20px;
+}
+
+.popup-character {
+font-size: 55px;
+font-weight: 900;
+color: white;
+margin-bottom: 20px;
+}
+
+.popup-question {
+color: white;
+font-size: 13px;
+line-height: 1.7;
+letter-spacing: 2px;
+}
+
+.popup-buttons {
+display: flex;
+justify-content: center;
+gap: 12px;
+margin-top: 30px;
+}
+
+.popup-buttons button {
+width: 110px;
+padding: 12px;
+background: transparent;
+color: white;
+
+border: 1px solid #444;
+
+font-size: 9px;
+font-weight: bold;
+letter-spacing: 3px;
+
+cursor: pointer;
+}
+
+.popup-buttons button:hover {
+background: white;
+color: black;
+}
+
+#errorPopup .popup-box {
+border-color: #633;
+}
+
+.error-title {
+font-size: 19px;
+font-weight: 800;
+letter-spacing: 2px;
+}
+
+.error-message {
+margin-top: 15px;
+color: #666;
+font-size: 10px;
+letter-spacing: 1px;
+line-height: 1.7;
+}
+
+.error-close {
+margin-top: 25px;
+padding: 11px 25px;
+background: white;
+color: black;
+
+border: none;
+
+font-size: 9px;
+font-weight: bold;
+letter-spacing: 3px;
+
+cursor: pointer;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+    .register-page {
+    padding: 25px 20px;
+}
+
+.register-container {
+    margin-top: 30px;
+}
+
+.register-header h1 {
+    font-size: 32px;
+}
+
+.captcha-section {
+    padding: 18px;
+}
+}

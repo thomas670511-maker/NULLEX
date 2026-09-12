@@ -1,1 +1,179 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>NULLEX — Rabbit Maze</title> <link rel="stylesheet" href="style.css"> </head> <body> <div class="game-wrapper">
+<div class="top-section">
+    <div class="brand">NULLEX</div>
 
+    <div class="status" id="status">
+        FIND THE WAY HOME
+    </div>
+</div>
+
+
+<div class="game-info">
+
+    <div>
+        <span class="label">MISSION</span>
+        <span class="value">GET THE RABBIT HOME</span>
+    </div>
+
+    <div>
+        <span class="label">ATTEMPTS</span>
+        <span class="value" id="attempts">0</span>
+    </div>
+
+    <div>
+        <span class="label">TIME</span>
+        <span class="value" id="timer">00:00</span>
+    </div>
+
+</div>
+
+
+<div class="maze-container">
+
+    <div class="maze">
+
+        <!-- OUTER WALLS -->
+
+        <div class="wall horizontal"
+             style="left:0%; top:0%; width:100%; height:12px;">
+        </div>
+
+        <div class="wall vertical"
+             style="left:0%; top:0%; width:12px; height:100%;">
+        </div>
+
+        <div class="wall horizontal"
+             style="left:0%; bottom:0%; width:100%; height:12px;">
+        </div>
+
+        <div class="wall vertical"
+             style="right:0%; top:0%; width:12px; height:100%;">
+        </div>
+
+
+        <!-- MAZE WALLS -->
+
+        <div class="wall horizontal"
+             style="left:0%; top:18%; width:35%; height:12px;">
+        </div>
+
+        <div class="wall vertical"
+             style="left:35%; top:18%; width:12px; height:35%;">
+        </div>
+
+        <div class="wall horizontal"
+             style="left:35%; top:53%; width:30%; height:12px;">
+        </div>
+
+        <div class="wall vertical"
+             style="left:65%; top:25%; width:12px; height:40%;">
+        </div>
+
+        <div class="wall horizontal"
+             style="left:65%; top:25%; width:25%; height:12px;">
+        </div>
+
+        <div class="wall vertical"
+             style="left:90%; top:25%; width:12px; height:50%;">
+        </div>
+
+        <div class="wall horizontal"
+             style="left:10%; top:75%; width:80%; height:12px;">
+        </div>
+
+        <div class="wall vertical"
+             style="left:10%; top:45%; width:12px; height:30%;">
+        </div>
+
+        <div class="wall horizontal"
+             style="left:10%; top:45%; width:25%; height:12px;">
+        </div>
+
+        <div class="wall vertical"
+             style="left:50%; top:65%; width:12px; height:10%;">
+        </div>
+
+        <div class="wall horizontal"
+             style="left:50%; top:85%; width:40%; height:12px;">
+        </div>
+
+        <div class="wall vertical"
+             style="left:50%; top:75%; width:12px; height:10%;">
+        </div>
+
+        <div class="wall horizontal"
+             style="left:20%; top:30%; width:15%; height:12px;">
+        </div>
+
+        <div class="wall vertical"
+             style="left:20%; top:30%; width:12px; height:15%;">
+        </div>
+
+        <div class="wall horizontal"
+             style="left:47%; top:10%; width:12%; height:12px;">
+        </div>
+
+        <div class="wall vertical"
+             style="left:47%; top:10%; width:12px; height:20%;">
+        </div>
+
+        <div class="wall horizontal"
+             style="left:72%; top:65%; width:18%; height:12px;">
+        </div>
+
+
+        <!-- HOME -->
+
+        <div class="home" id="home">
+
+            <div class="home-roof"></div>
+
+            <div class="home-body">
+                <div class="home-door"></div>
+            </div>
+
+            <div class="home-text">
+                HOME
+            </div>
+
+        </div>
+
+
+        <!-- RABBIT -->
+
+        <div id="rabbit">
+
+            <div class="ear ear-left"></div>
+            <div class="ear ear-right"></div>
+
+            <div class="rabbit-head">
+
+                <div class="eye eye-left"></div>
+                <div class="eye eye-right"></div>
+
+                <div class="nose"></div>
+                <div class="mouth"></div>
+
+            </div>
+
+            <div class="rabbit-body"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="bottom-section">
+
+    <div class="instruction">
+        MOVE YOUR MOUSE TO GUIDE THE RABBIT
+    </div>
+
+    <div class="warning">
+        ⚠ TOUCH THE WALL = START AGAIN
+    </div>
+
+</div>
+</div> <!-- CONTINUE BUTTON --> <button id="nextButton"> CONTINUE → </button> <script src="script.js"></script> </body> </html>

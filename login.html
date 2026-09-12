@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>NULLEX — Login</title>
+
+<link rel="stylesheet" href="login.css">
+
+
+</head>
+
+<body>
+
+<div class="login-page">
+
+<div class="brand">
+    NULLEX
+</div>
+
+<div class="login-container">
+
+    <div class="login-header">
+
+        <div class="small-text">
+            ACCESS PROTOCOL
+        </div>
+
+        <h1>
+            LOGIN
+        </h1>
+
+        <p>
+            YOU HAVE COME THIS FAR. NOW PROVE IT.
+        </p>
+
+    </div>
+
+    <form id="loginForm">
+
+        <div class="input-group">
+
+            <label>
+                USERNAME OR EMAIL
+            </label>
+
+            <input
+                type="text"
+                id="loginIdentifier"
+                autocomplete="off"
+                placeholder="ENTER USERNAME OR EMAIL"
+                required
+            >
+
+        </div>
+
+        <div class="input-group">
+
+            <label>
+                PASSWORD
+            </label>
+
+            <div class="password-wrapper">
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    autocomplete="current-password"
+                    placeholder="ENTER PASSWORD"
+                    required
+                >
+
+                <button
+                    type="button"
+                    id="showLoginPassword"
+                >
+                    SHOW
+                </button>
+
+            </div>
+
+        </div>
+
+        <div
+            class="login-status"
+            id="loginStatus"
+        >
+            WAITING FOR YOUR CREDENTIALS...
+        </div>
+
+        <button
+            type="submit"
+            id="loginButton"
+            class="login-button"
+        >
+            LOGIN →
+        </button>
+
+    </form>
+
+    <div class="bottom-message">
+        NULLEX DOES NOT TRUST YOU YET.
+    </div>
+
+</div>
+
+</div>
+
+<!-- LOGIN POPUP -->
+
+<div
+    class="popup-overlay"
+    id="loginPopup"
+>
+
+<div class="popup-box">
+
+    <div class="popup-warning">
+        NULLEX ACCESS CONTROL
+    </div>
+
+    <div
+        class="popup-title"
+        id="popupTitle"
+    >
+        ACCESS DENIED
+    </div>
+
+    <div
+        class="popup-message"
+        id="popupMessage"
+    >
+        SOMETHING WENT WRONG.
+    </div>
+
+    <button
+        type="button"
+        id="popupClose"
+    >
+        FINE.
+    </button>
+
+</div>
+
+</div>
+
+<script src="login.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,361 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
+
+body {
+background: #080808;
+color: white;
+font-family: Arial, Helvetica, sans-serif;
+min-height: 100vh;
+}
+
+.login-page {
+min-height: 100vh;
+padding: 35px 50px;
+}
+
+.brand {
+font-size: 24px;
+font-weight: 900;
+letter-spacing: 7px;
+}
+
+.login-container {
+width: min(500px, 92vw);
+margin: 120px auto 0;
+}
+
+.login-header {
+text-align: center;
+margin-bottom: 45px;
+}
+
+.small-text {
+color: #666;
+font-size: 9px;
+letter-spacing: 5px;
+margin-bottom: 15px;
+}
+
+.login-header h1 {
+font-size: 46px;
+letter-spacing: 8px;
+}
+
+.login-header p {
+color: #555;
+font-size: 9px;
+letter-spacing: 2px;
+margin-top: 15px;
+}
+
+.input-group {
+margin-bottom: 25px;
+}
+
+.input-group label {
+display: block;
+color: #777;
+font-size: 9px;
+letter-spacing: 3px;
+margin-bottom: 9px;
+}
+
+.input-group input {
+width: 100%;
+height: 50px;
+padding: 0 15px;
+
+background: #0e0e0e;
+border: 1px solid #292929;
+
+color: white;
+outline: none;
+
+font-size: 12px;
+letter-spacing: 1px;
+
+}
+
+.input-group input:focus {
+border-color: #777;
+}
+
+.input-group input::placeholder {
+color: #3e3e3e;
+}
+
+.password-wrapper {
+position: relative;
+}
+
+.password-wrapper input {
+padding-right: 80px;
+}
+
+#showLoginPassword {
+position: absolute;
+right: 8px;
+top: 8px;
+
+height: 34px;
+padding: 0 11px;
+
+background: transparent;
+border: 1px solid #333;
+
+color: #777;
+
+font-size: 8px;
+letter-spacing: 2px;
+
+cursor: pointer;
+
+}
+
+#showLoginPassword:hover {
+background: white;
+color: black;
+}
+
+.login-status {
+min-height: 18px;
+
+margin-top: 8px;
+
+color: #555;
+
+font-size: 8px;
+letter-spacing: 2px;
+
+text-align: center;
+
+
+}
+
+.login-button {
+width: 100%;
+height: 54px;
+
+
+margin-top: 25px;
+
+background: white;
+color: black;
+
+border: none;
+
+font-size: 10px;
+font-weight: bold;
+
+letter-spacing: 4px;
+
+cursor: pointer;
+
+transition: 0.2s;
+
+}
+
+.login-button:hover {
+background: #ccc;
+letter-spacing: 7px;
+}
+
+.login-button:disabled {
+background: #222;
+color: #555;
+cursor: not-allowed;
+}
+
+.bottom-message {
+margin-top: 35px;
+
+
+text-align: center;
+
+color: #333;
+
+font-size: 7px;
+letter-spacing: 3px;
+
+}
+
+/* ==========================================
+POPUP
+========================================== */
+
+.popup-overlay {
+position: fixed;
+inset: 0;
+
+background: rgba(0, 0, 0, 0.95);
+
+display: none;
+
+justify-content: center;
+align-items: center;
+
+z-index: 99999;
+
+}
+
+/* THIS WAS THE MISSING PART */
+
+.popup-overlay.show {
+display: flex;
+}
+
+/* ==========================================
+POPUP BOX
+========================================== */
+
+.popup-box {
+width: min(460px, 90vw);
+
+padding: 45px 30px;
+
+background: #0b0b0b;
+
+border: 1px solid #444;
+
+text-align: center;
+
+animation: popupAppear 0.25s ease;
+
+
+}
+
+@keyframes popupAppear {
+
+
+from {
+    opacity: 0;
+    transform: scale(0.92);
+}
+
+to {
+    opacity: 1;
+    transform: scale(1);
+}
+
+}
+
+/* ==========================================
+POPUP CONTENT
+========================================== */
+
+.popup-warning {
+color: #666;
+
+font-size: 8px;
+
+letter-spacing: 5px;
+
+margin-bottom: 20px;
+
+
+}
+
+.popup-title {
+color: white;
+
+
+font-size: 21px;
+
+font-weight: 900;
+
+letter-spacing: 3px;
+
+
+}
+
+.popup-message {
+margin-top: 15px;
+
+
+color: #666;
+
+font-size: 10px;
+
+letter-spacing: 1px;
+
+line-height: 1.8;
+
+
+}
+
+/* ==========================================
+POPUP BUTTON
+========================================== */
+
+#popupClose {
+margin-top: 28px;
+
+padding: 12px 30px;
+
+background: white;
+color: black;
+
+border: none;
+
+font-size: 9px;
+font-weight: bold;
+
+letter-spacing: 3px;
+
+cursor: pointer;
+
+transition: 0.2s;
+
+
+}
+
+#popupClose:hover {
+background: #bbb;
+transform: scale(1.04);
+}
+
+/* ==========================================
+EVASIVE LOGIN BUTTON
+========================================== */
+
+#loginButton {
+transition:
+left 0.18s ease,
+top 0.18s ease,
+transform 0.18s ease,
+background 0.2s,
+letter-spacing 0.2s;
+}
+
+#loginButton.escaping {
+transform: scale(0.96);
+}
+
+/* ==========================================
+MOBILE
+========================================== */
+
+@media (max-width: 600px) {
+
+.login-page {
+    padding: 25px 20px;
+}
+
+.login-container {
+    margin-top: 90px;
+}
+
+.login-header h1 {
+    font-size: 34px;
+}
+
+#loginButton {
+    transition:
+        left 0.15s ease,
+        top 0.15s ease;
+}
+
+}

@@ -1,0 +1,3442 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NULLEX — The Coconut Problem</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    user-select:none;
+}
+
+body{
+    overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#111;
+}
+
+button{
+    font-family:inherit;
+}
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+#game{
+    width:100vw;
+    height:100vh;
+    position:relative;
+    overflow:hidden;
+}
+
+.header{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:64px;
+    z-index:1000;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 28px;
+    background:rgba(0,0,0,.72);
+    color:white;
+}
+
+.logo{
+    font-size:22px;
+    font-weight:900;
+    letter-spacing:7px;
+}
+
+.phase{
+    font-size:9px;
+    letter-spacing:3px;
+    color:#ddd;
+}
+
+.scene{
+    display:none;
+    position:absolute;
+    top:64px;
+    left:0;
+    right:0;
+    bottom:0;
+}
+
+.scene.active{
+    display:block;
+}
+
+.instructions{
+    position:absolute;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:300;
+    text-align:center;
+    background:rgba(0,0,0,.48);
+    padding:12px 25px;
+    border-radius:8px;
+    color:white;
+    box-shadow:0 4px 20px rgba(0,0,0,.2);
+}
+
+.instructions small{
+    display:block;
+    font-size:8px;
+    letter-spacing:3px;
+    opacity:.75;
+}
+
+.instructions h2{
+    margin-top:5px;
+    font-size:23px;
+    letter-spacing:3px;
+}
+
+.instructions p{
+    margin-top:5px;
+    font-size:9px;
+    opacity:.7;
+    letter-spacing:1px;
+}
+
+/* =====================================================
+   TREE SCENE
+===================================================== */
+
+#treeScene{
+    background:
+        linear-gradient(
+            to bottom,
+            #69c9f2 0%,
+            #a8e5fa 58%,
+            #d9f4df 59%,
+            #78bd58 60%,
+            #4c963d 100%
+        );
+}
+
+/* sun */
+
+.sun{
+    position:absolute;
+    width:100px;
+    height:100px;
+    border-radius:50%;
+    right:10%;
+    top:9%;
+    background:#ffe36e;
+    box-shadow:
+        0 0 30px #fff0a1,
+        0 0 70px rgba(255,220,70,.5);
+}
+
+/* clouds */
+
+.cloud{
+    position:absolute;
+    width:150px;
+    height:45px;
+    background:white;
+    border-radius:50px;
+    opacity:.85;
+}
+
+.cloud:before,
+.cloud:after{
+    content:"";
+    position:absolute;
+    background:white;
+    border-radius:50%;
+}
+
+.cloud:before{
+    width:65px;
+    height:65px;
+    left:20px;
+    top:-30px;
+}
+
+.cloud:after{
+    width:80px;
+    height:80px;
+    right:20px;
+    top:-40px;
+}
+
+.cloud.one{
+    left:8%;
+    top:17%;
+}
+
+.cloud.two{
+    right:22%;
+    top:29%;
+    transform:scale(.7);
+}
+
+/* ground */
+
+.grass{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:40%;
+    background:
+        linear-gradient(
+            to bottom,
+            #76c84d,
+            #4f9e38
+        );
+}
+
+.grass:before{
+    content:"";
+    position:absolute;
+    inset:0;
+    opacity:.25;
+    background-image:
+        radial-gradient(#235c25 1px,transparent 1px);
+    background-size:13px 13px;
+}
+
+/* flowers */
+
+.flower{
+    position:absolute;
+    bottom:13%;
+    font-size:22px;
+}
+
+/* tree */
+
+.tree{
+    position:absolute;
+    left:50%;
+    bottom:15%;
+    width:420px;
+    height:570px;
+    transform:translateX(-50%);
+}
+
+.trunk{
+    position:absolute;
+    bottom:0;
+    left:177px;
+    width:72px;
+    height:410px;
+    border-radius:48% 52% 15px 15px;
+    background:
+        repeating-linear-gradient(
+            75deg,
+            #70401f 0px,
+            #92572a 14px,
+            #623619 26px,
+            #81451f 40px
+        );
+    box-shadow:
+        inset 10px 0 8px rgba(255,255,255,.08),
+        inset -12px 0 12px rgba(0,0,0,.2);
+    transform:rotate(-4deg);
+}
+
+.trunk:before{
+    content:"";
+    position:absolute;
+    left:-6px;
+    top:45px;
+    width:84px;
+    height:9px;
+    border-radius:50%;
+    background:rgba(50,25,10,.5);
+    box-shadow:
+        0 65px rgba(50,25,10,.4),
+        0 130px rgba(50,25,10,.4),
+        0 195px rgba(50,25,10,.4),
+        0 260px rgba(50,25,10,.4);
+}
+
+/* leaves */
+
+.crown{
+    position:absolute;
+    left:50%;
+    top:30px;
+    width:80px;
+    height:80px;
+    transform:translateX(-50%);
+    z-index:4;
+}
+
+.leaf{
+    position:absolute;
+    left:40px;
+    top:40px;
+    width:250px;
+    height:38px;
+    border-radius:100% 0 100% 0;
+    transform-origin:left center;
+    background:
+        linear-gradient(
+            to bottom,
+            #2f9d45,
+            #176d30
+        );
+    box-shadow:
+        inset 0 -5px rgba(0,0,0,.15);
+}
+
+.leaf:after{
+    content:"";
+    position:absolute;
+    left:10px;
+    top:18px;
+    width:230px;
+    border-top:2px solid rgba(170,230,130,.35);
+}
+
+.leaf:nth-child(1){transform:rotate(-80deg)}
+.leaf:nth-child(2){transform:rotate(-55deg)}
+.leaf:nth-child(3){transform:rotate(-30deg)}
+.leaf:nth-child(4){transform:rotate(-5deg)}
+.leaf:nth-child(5){transform:rotate(20deg)}
+.leaf:nth-child(6){transform:rotate(45deg)}
+.leaf:nth-child(7){transform:rotate(70deg)}
+.leaf:nth-child(8){transform:rotate(100deg)}
+.leaf:nth-child(9){transform:rotate(145deg)}
+.leaf:nth-child(10){transform:rotate(200deg)}
+.leaf:nth-child(11){transform:rotate(235deg)}
+.leaf:nth-child(12){transform:rotate(270deg)}
+
+/* coconuts */
+
+.coconut{
+    position:absolute;
+    width:31px;
+    height:38px;
+    border-radius:48%;
+    z-index:15;
+    cursor:pointer;
+    background:
+        radial-gradient(
+            circle at 35% 25%,
+            #9b6737,
+            #633b1d 55%,
+            #3e2414
+        );
+    border:2px solid #3b2414;
+    box-shadow:
+        inset 4px 4px 5px rgba(255,255,255,.15),
+        3px 4px 5px rgba(0,0,0,.3);
+    transition:.2s;
+}
+
+.coconut:hover{
+    transform:scale(1.2) rotate(5deg);
+}
+
+.coconut.taken{
+    opacity:.25;
+    transform:scale(.6);
+    pointer-events:none;
+}
+
+.co1{left:130px;top:95px}
+.co2{left:177px;top:82px}
+.co3{left:225px;top:106px}
+.co4{left:280px;top:86px}
+.co5{left:105px;top:140px}
+.co6{left:160px;top:145px}
+.co7{left:215px;top:137px}
+.co8{left:275px;top:145px}
+.co9{left:195px;top:190px}
+
+/* =====================================================
+   MONKEY
+===================================================== */
+
+.monkey{
+    position:absolute;
+    width:80px;
+    height:125px;
+    z-index:50;
+    cursor:pointer;
+    transition:
+        left .9s cubic-bezier(.2,.8,.2,1),
+        bottom .9s cubic-bezier(.2,.8,.2,1);
+}
+
+.monkey-head{
+    position:absolute;
+    width:58px;
+    height:58px;
+    left:11px;
+    top:0;
+    border-radius:50%;
+    background:#9a5d35;
+    border:3px solid #643719;
+    z-index:4;
+}
+
+.monkey-face{
+    position:absolute;
+    width:43px;
+    height:36px;
+    left:5px;
+    top:17px;
+    border-radius:50%;
+    background:#d29461;
+}
+
+.ear{
+    position:absolute;
+    width:25px;
+    height:32px;
+    top:12px;
+    border-radius:50%;
+    background:#8b4e2b;
+    border:3px solid #603418;
+    z-index:-1;
+}
+
+.ear.left{left:-10px}
+.ear.right{right:-10px}
+
+.eye{
+    position:absolute;
+    top:12px;
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:#111;
+}
+
+.eye.left{left:12px}
+.eye.right{right:12px}
+
+.eye:after{
+    content:"";
+    position:absolute;
+    width:2px;
+    height:2px;
+    background:white;
+    border-radius:50%;
+    top:1px;
+    left:1px;
+}
+
+.nose{
+    position:absolute;
+    width:9px;
+    height:6px;
+    left:17px;
+    top:23px;
+    border-radius:50%;
+    background:#57301d;
+}
+
+.mouth{
+    position:absolute;
+    width:18px;
+    height:9px;
+    left:12px;
+    top:28px;
+    border-bottom:3px solid #522716;
+    border-radius:50%;
+}
+
+.body{
+    position:absolute;
+    width:52px;
+    height:58px;
+    left:14px;
+    top:51px;
+    border-radius:48% 48% 35% 35%;
+    background:#89502e;
+    border:3px solid #613719;
+}
+
+.belly{
+    position:absolute;
+    width:34px;
+    height:38px;
+    left:6px;
+    top:10px;
+    border-radius:50%;
+    background:#b97749;
+}
+
+.arm{
+    position:absolute;
+    width:13px;
+    height:48px;
+    top:56px;
+    border-radius:15px;
+    background:#89502e;
+    border:3px solid #613719;
+}
+
+.arm.left{
+    left:4px;
+    transform:rotate(20deg);
+}
+
+.arm.right{
+    right:4px;
+    transform:rotate(-20deg);
+}
+
+.leg{
+    position:absolute;
+    width:15px;
+    height:42px;
+    top:94px;
+    border-radius:15px;
+    background:#89502e;
+    border:3px solid #613719;
+}
+
+.leg.left{left:20px}
+.leg.right{right:20px}
+
+.tail{
+    position:absolute;
+    width:65px;
+    height:75px;
+    right:-45px;
+    top:50px;
+    border:9px solid #754321;
+    border-left:none;
+    border-bottom:none;
+    border-radius:0 60px 0 0;
+    transform:rotate(15deg);
+}
+
+.monkey.selected{
+    animation:monkeyBounce .4s infinite alternate;
+}
+
+@keyframes monkeyBounce{
+    from{transform:translateY(0)}
+    to{transform:translateY(-7px)}
+}
+
+/* =====================================================
+   TRAFFIC SCENE
+===================================================== */
+
+#trafficScene{
+    background:#80cfee;
+}
+
+/* city sky */
+
+.city-sky{
+    position:absolute;
+    inset:0;
+    height:44%;
+    background:
+        linear-gradient(
+            #62c5ed,
+            #bceafa
+        );
+}
+
+/* buildings */
+
+.buildings{
+    position:absolute;
+    bottom:56%;
+    left:0;
+    width:100%;
+    height:35%;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-around;
+}
+
+.building{
+    width:12%;
+    min-width:75px;
+    height:75%;
+    background:#e7b96c;
+    border:3px solid #b77d3d;
+    position:relative;
+}
+
+.building:nth-child(2){
+    height:95%;
+    background:#d98787;
+}
+
+.building:nth-child(3){
+    height:70%;
+    background:#7ea8c9;
+}
+
+.building:nth-child(4){
+    height:100%;
+    background:#e2d37b;
+}
+
+.building:nth-child(5){
+    height:82%;
+    background:#9c83b9;
+}
+
+.window{
+    position:absolute;
+    width:13px;
+    height:18px;
+    background:#6dc3d8;
+    border:2px solid #fff;
+    box-shadow:inset 0 0 4px rgba(0,0,0,.3);
+}
+
+/* road */
+
+.sidewalk{
+    position:absolute;
+    left:0;
+    width:100%;
+    height:9%;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #aaa 0,
+            #aaa 50px,
+            #888 50px,
+            #888 100px
+        );
+}
+
+.sidewalk.top{
+    top:40%;
+}
+
+.sidewalk.bottom{
+    bottom:0;
+}
+
+.road{
+    position:absolute;
+    top:49%;
+    bottom:9%;
+    left:0;
+    width:100%;
+    background:#3d4145;
+    border-top:6px solid #ddd;
+}
+
+.road-line{
+    position:absolute;
+    width:100%;
+    border-top:5px dashed #eee;
+}
+
+.road-line.one{top:33%}
+.road-line.two{top:66%}
+
+/* traffic lights */
+
+.traffic-light{
+    position:absolute;
+    top:18%;
+    right:6%;
+    width:48px;
+    height:130px;
+    background:#202020;
+    border:4px solid #111;
+    border-radius:10px;
+    z-index:30;
+}
+
+.light{
+    width:27px;
+    height:27px;
+    margin:7px auto;
+    border-radius:50%;
+    background:#444;
+}
+
+.light.red{background:#ed3d3d;box-shadow:0 0 15px #ed3d3d}
+.light.yellow{background:#555}
+.light.green{background:#555}
+
+/* cars */
+
+.car{
+    position:absolute;
+    width:105px;
+    height:48px;
+    z-index:50;
+    border-radius:14px 18px 8px 8px;
+    border:3px solid rgba(0,0,0,.35);
+    box-shadow:0 5px 10px rgba(0,0,0,.3);
+}
+
+.car:before{
+    content:"";
+    position:absolute;
+    width:48px;
+    height:24px;
+    left:27px;
+    top:-19px;
+    border-radius:15px 15px 3px 3px;
+    background:inherit;
+    border:3px solid rgba(0,0,0,.3);
+}
+
+.car:after{
+    content:"";
+    position:absolute;
+    width:17px;
+    height:17px;
+    border-radius:50%;
+    background:#171717;
+    bottom:-11px;
+    left:15px;
+    box-shadow:58px 0 #171717;
+}
+
+.car.red{background:#e74c3c}
+.car.blue{background:#3498db}
+.car.yellow{background:#f1c40f}
+.car.green{background:#2ecc71}
+.car.white{background:#ecf0f1}
+
+.car .window{
+    width:19px;
+    height:12px;
+    top:-12px;
+    background:#9ed4e5;
+    border:2px solid #333;
+}
+
+.car .window.w1{left:33px}
+.car .window.w2{left:57px}
+
+/* road monkey */
+
+.road-monkey{
+    position:absolute;
+    width:65px;
+    height:100px;
+    z-index:200;
+    transition:.12s;
+}
+
+.road-monkey .monkey-head{
+    transform:scale(.78);
+    transform-origin:top left;
+}
+
+.road-monkey .body{
+    transform:scale(.78);
+    transform-origin:top left;
+}
+
+.road-monkey .tail{
+    transform:scale(.7);
+    transform-origin:top left;
+}
+
+/* coconut carried */
+
+.carried-coconut{
+    position:absolute;
+    width:24px;
+    height:30px;
+    left:32px;
+    top:52px;
+    border-radius:50%;
+    background:#71441f;
+    border:2px solid #432812;
+    z-index:10;
+}
+
+/* =====================================================
+   SHAKE SCENE
+===================================================== */
+
+#shakeScene{
+    background:
+        linear-gradient(
+            #4da9d5 0%,
+            #bdebf6 50%,
+            #73bd55 51%,
+            #4d9d39 100%
+        );
+}
+
+.shake-content{
+    position:absolute;
+    left:50%;
+    top:53%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+}
+
+.big-coconut{
+    width:210px;
+    height:250px;
+    margin:auto;
+    position:relative;
+    border-radius:48% 48% 45% 45%;
+    cursor:pointer;
+    background:
+        radial-gradient(
+            circle at 30% 22%,
+            #a96c35,
+            #70421f 35%,
+            #492813 70%,
+            #2f1a0d
+        );
+    border:8px solid #321b0d;
+    box-shadow:
+        inset 18px 15px 20px rgba(255,255,255,.12),
+        inset -18px -15px 25px rgba(0,0,0,.3),
+        0 15px 30px rgba(0,0,0,.35);
+}
+
+.big-coconut:before{
+    content:"";
+    position:absolute;
+    width:70px;
+    height:22px;
+    left:62px;
+    top:35px;
+    border-radius:50%;
+    background:#231207;
+    box-shadow:
+        35px 4px #231207;
+}
+
+.big-coconut:after{
+    content:"🥥";
+    position:absolute;
+    font-size:40px;
+    left:75px;
+    top:105px;
+    opacity:.35;
+}
+
+.big-coconut.shaking{
+    animation:coconutShake .08s infinite;
+}
+
+@keyframes coconutShake{
+    0%{transform:rotate(-4deg) translateX(-6px)}
+    50%{transform:rotate(4deg) translateX(6px)}
+    100%{transform:rotate(-4deg) translateX(-6px)}
+}
+
+.shake-count{
+    margin-top:25px;
+    font-size:11px;
+    font-weight:bold;
+    letter-spacing:4px;
+    color:#333;
+}
+
+.progress{
+    width:300px;
+    max-width:80vw;
+    height:12px;
+    margin:15px auto;
+    background:rgba(0,0,0,.2);
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.progress-fill{
+    height:100%;
+    width:0%;
+    background:#fff;
+    border-radius:10px;
+    transition:.1s;
+}
+
+.shake-help{
+    color:#555;
+    font-size:9px;
+    letter-spacing:2px;
+}
+
+/* =====================================================
+   REVEAL
+===================================================== */
+
+#revealScene{
+    background:
+        radial-gradient(
+            circle at center,
+            #333 0,
+            #111 45%,
+            #050505 100%
+        );
+    color:white;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+.reveal{
+    width:min(700px,90%);
+}
+
+.reveal small{
+    color:#777;
+    letter-spacing:5px;
+    font-size:9px;
+}
+
+.reveal h1{
+    margin-top:20px;
+    font-size:clamp(40px,8vw,80px);
+    letter-spacing:10px;
+}
+
+.reveal hr{
+    border:0;
+    border-top:1px solid #444;
+    margin:30px 0;
+}
+
+.reveal p{
+    color:#aaa;
+    font-size:11px;
+    line-height:2;
+    letter-spacing:2px;
+}
+
+.reason{
+    margin:25px auto;
+    padding:25px;
+    background:#111;
+    border:1px solid #555;
+    border-radius:8px;
+}
+
+.reason-label{
+    color:#666;
+    font-size:8px;
+    letter-spacing:4px;
+}
+
+.reason-answer{
+    margin-top:15px;
+    font-size:20px;
+    font-weight:bold;
+    letter-spacing:3px;
+}
+
+.time-label{
+    color:#666;
+    font-size:8px;
+    letter-spacing:4px;
+}
+
+#wasted{
+    margin-top:8px;
+    font-size:35px;
+    letter-spacing:5px;
+}
+
+.restart{
+    margin-top:25px;
+    padding:15px 35px;
+    border:0;
+    border-radius:4px;
+    background:white;
+    color:black;
+    font-weight:bold;
+    letter-spacing:3px;
+    cursor:pointer;
+}
+
+.restart:hover{
+    transform:scale(1.04);
+    background:#eee;
+}
+/* =====================================================
+FINAL REVEAL
+===================================================== */
+
+#revealScene{
+position:absolute;
+inset:64px 0 0 0;
+
+overflow:hidden;
+
+background:#050505;
+
+color:white;
+
+}
+
+/* =====================================================
+FIRST FINAL SCREEN
+===================================================== */
+
+.final-start{
+position:absolute;
+inset:0;
+
+display:flex;
+flex-direction:column;
+
+align-items:center;
+justify-content:center;
+
+text-align:center;
+
+background:
+    radial-gradient(
+        circle at center,
+        #303030 0%,
+        #151515 45%,
+        #050505 100%
+    );
+
+z-index:20;
+
+transition:
+    opacity .8s ease,
+    transform .8s ease;
+
+}
+
+.final-start.hide{
+opacity:0;
+transform:scale(1.15);
+pointer-events:none;
+}
+
+.final-glow{
+position:absolute;
+
+width:400px;
+height:400px;
+
+border-radius:50%;
+
+background:
+    radial-gradient(
+        circle,
+        rgba(255,255,255,.09),
+        transparent 65%
+    );
+
+animation:
+    finalGlow 3s infinite alternate;
+
+
+}
+
+@keyframes finalGlow{
+
+
+from{
+    transform:scale(.8);
+    opacity:.4;
+}
+
+to{
+    transform:scale(1.2);
+    opacity:1;
+}
+
+
+}
+
+.final-small{
+position:relative;
+
+color:#777;
+
+font-size:9px;
+
+letter-spacing:5px;
+
+margin-bottom:25px;
+
+}
+
+.final-start h1{
+position:relative;
+
+margin:0;
+
+font-size:
+    clamp(45px,8vw,100px);
+
+letter-spacing:10px;
+
+font-weight:900;
+
+text-shadow:
+    0 0 30px rgba(255,255,255,.15);
+
+}
+
+.final-start p{
+position:relative;
+
+margin-top:25px;
+
+color:#888;
+
+font-size:10px;
+
+line-height:2.1;
+
+letter-spacing:3px;
+
+}
+
+#letsGoButton{
+position:relative;
+
+margin-top:40px;
+
+padding:18px 55px;
+
+border:1px solid #777;
+
+background:white;
+
+color:#111;
+
+font-size:12px;
+
+font-weight:900;
+
+letter-spacing:4px;
+
+border-radius:4px;
+
+cursor:pointer;
+
+transition:
+    transform .2s,
+    box-shadow .2s;
+
+}
+
+#letsGoButton:hover{
+transform:
+translateY(-4px)
+scale(1.04);
+
+box-shadow:
+    0 12px 35px rgba(255,255,255,.15);
+
+}
+
+/* =====================================================
+COCONUT ENDING
+===================================================== */
+
+.coconut-ending{
+position:absolute;
+
+inset:0;
+
+overflow:hidden;
+
+opacity:0;
+
+pointer-events:none;
+
+transition:opacity 1s;
+
+background:#7bc9e9;
+
+}
+
+.coconut-ending.active{
+opacity:1;
+
+pointer-events:auto;
+
+
+}
+
+/* SKY */
+
+.ending-sky{
+position:absolute;
+inset:0;
+
+background:
+    linear-gradient(
+        to bottom,
+        #48b8e8 0%,
+        #a7e3f5 62%,
+        #d6f2d1 63%,
+        #72bb50 100%
+    );
+
+}
+
+/* SUN */
+
+.ending-sun{
+position:absolute;
+
+width:130px;
+height:130px;
+
+right:10%;
+top:9%;
+
+border-radius:50%;
+
+background:#ffe66d;
+
+box-shadow:
+    0 0 35px #fff2a0,
+    0 0 90px rgba(255,220,70,.5);
+
+}
+
+/* CLOUDS */
+
+.ending-cloud{
+position:absolute;
+
+width:170px;
+height:48px;
+
+border-radius:50px;
+
+background:white;
+
+opacity:.8;
+
+}
+
+.ending-cloud:before,
+.ending-cloud:after{
+content:"";
+
+position:absolute;
+
+background:white;
+
+border-radius:50%;
+
+}
+
+.ending-cloud:before{
+width:70px;
+height:70px;
+
+left:25px;
+top:-30px;
+
+
+}
+
+.ending-cloud:after{
+width:85px;
+height:85px;
+
+right:20px;
+top:-42px;
+
+}
+
+.cloud-a{
+left:8%;
+top:20%;
+}
+
+.cloud-b{
+right:25%;
+top:32%;
+
+transform:scale(.7);
+
+}
+
+/* GROUND */
+
+.ending-ground{
+position:absolute;
+
+left:0;
+right:0;
+bottom:0;
+
+height:27%;
+
+background:
+    linear-gradient(
+        to bottom,
+        #72c552,
+        #438d36
+    );
+
+}
+
+/* =====================================================
+ENDING TREE
+===================================================== */
+
+.ending-tree{
+position:absolute;
+
+left:8%;
+
+bottom:13%;
+
+width:430px;
+height:570px;
+
+transform:
+    scale(.9);
+
+}
+
+/* TRUNK */
+
+.ending-trunk{
+position:absolute;
+
+left:180px;
+bottom:0;
+
+width:78px;
+height:430px;
+
+border-radius:
+    48% 52%
+    15px 15px;
+
+background:
+    repeating-linear-gradient(
+        75deg,
+        #5d3217 0px,
+        #8d5228 14px,
+        #633719 28px,
+        #92542a 43px
+    );
+
+transform:rotate(-4deg);
+
+box-shadow:
+    inset 10px 0 8px rgba(255,255,255,.1),
+    inset -15px 0 15px rgba(0,0,0,.2);
+
+}
+
+/* LEAVES */
+
+.ending-leaf{
+position:absolute;
+
+left:215px;
+top:50px;
+
+width:260px;
+height:45px;
+
+border-radius:
+    100% 0 100% 0;
+
+transform-origin:left center;
+
+background:
+    linear-gradient(
+        to bottom,
+        #299d46,
+        #12672e
+    );
+
+box-shadow:
+    inset 0 -5px rgba(0,0,0,.15);
+
+}
+
+.leaf-a{transform:rotate(-85deg)}
+.leaf-b{transform:rotate(-60deg)}
+.leaf-c{transform:rotate(-35deg)}
+.leaf-d{transform:rotate(-10deg)}
+.leaf-e{transform:rotate(20deg)}
+.leaf-f{transform:rotate(55deg)}
+
+/* TREE COCONUTS */
+
+.ending-coconut{
+position:absolute;
+
+width:32px;
+height:40px;
+
+border-radius:48%;
+
+background:
+    radial-gradient(
+        circle at 30% 25%,
+        #9c6535,
+        #603719 60%,
+        #351d0e
+    );
+
+border:2px solid #39200f;
+
+z-index:10;
+
+}
+
+.coconut-tree-one{
+left:145px;
+top:105px;
+}
+
+.coconut-tree-two{
+left:215px;
+top:90px;
+}
+
+.coconut-tree-three{
+left:280px;
+top:120px;
+}
+
+/* =====================================================
+ENDING MONKEY
+===================================================== */
+
+.ending-monkey{
+position:absolute;
+
+left:-140px;
+bottom:38%;
+
+width:90px;
+height:140px;
+
+z-index:50;
+
+opacity:0;
+
+transform:
+    translateX(0)
+    translateY(0)
+    rotate(-20deg);
+
+transition:none;
+
+}
+
+/* monkey enters from the side */
+
+.ending-monkey.jump{
+opacity:1;
+
+animation:
+    monkeySideJump 2.2s
+    cubic-bezier(.2,.8,.2,1)
+    forwards;
+
+}
+
+@keyframes monkeySideJump{
+
+0%{
+    left:-140px;
+
+    transform:
+        translateY(100px)
+        rotate(-25deg)
+        scale(.8);
+}
+
+20%{
+    left:5%;
+
+    transform:
+        translateY(-80px)
+        rotate(15deg)
+        scale(.9);
+}
+
+40%{
+    left:18%;
+
+    transform:
+        translateY(20px)
+        rotate(-10deg)
+        scale(1);
+}
+
+60%{
+    left:30%;
+
+    transform:
+        translateY(-100px)
+        rotate(10deg)
+        scale(1.05);
+}
+
+80%{
+    left:40%;
+
+    transform:
+        translateY(0)
+        rotate(-5deg)
+        scale(1.05);
+}
+
+100%{
+    left:46%;
+
+    transform:
+        translateY(0)
+        rotate(0deg)
+        scale(1.05);
+}
+
+}
+
+.ending-monkey.jump{
+opacity:1;
+
+transform:
+    translateY(0)
+    rotate(0deg);
+
+}
+
+/* HEAD */
+
+.ending-head{
+position:absolute;
+
+width:65px;
+height:65px;
+
+left:12px;
+top:0;
+
+border-radius:50%;
+
+background:#985b32;
+
+border:3px solid #613719;
+
+z-index:4;
+
+}
+
+.ending-face{
+position:absolute;
+
+width:47px;
+height:40px;
+
+left:6px;
+top:19px;
+
+border-radius:50%;
+
+background:#d39460;
+
+}
+
+/* EARS */
+
+.ending-ear{
+position:absolute;
+
+width:27px;
+height:34px;
+
+top:15px;
+
+border-radius:50%;
+
+background:#8a4c29;
+
+border:3px solid #5e341a;
+
+z-index:-1;
+
+}
+
+.ending-ear-left{
+left:-11px;
+}
+
+.ending-ear-right{
+right:-11px;
+}
+
+/* EYES */
+
+.ending-eye{
+position:absolute;
+
+top:12px;
+
+width:8px;
+height:8px;
+
+border-radius:50%;
+
+background:#111;
+
+}
+
+.ending-eye-left{
+left:12px;
+}
+
+.ending-eye-right{
+right:12px;
+}
+
+.ending-eye:after{
+content:"";
+
+position:absolute;
+
+width:3px;
+height:3px;
+
+top:1px;
+left:1px;
+
+border-radius:50%;
+
+background:white;
+
+}
+
+/* NOSE */
+
+.ending-nose{
+position:absolute;
+
+left:18px;
+top:25px;
+
+width:10px;
+height:7px;
+
+border-radius:50%;
+
+background:#502817;
+
+}
+
+/* MOUTH */
+
+.ending-mouth{
+position:absolute;
+
+left:14px;
+top:31px;
+
+width:20px;
+height:10px;
+
+border-bottom:
+    3px solid #4d2415;
+
+border-radius:50%;
+
+}
+
+/* BODY */
+
+.ending-body{
+position:absolute;
+
+left:17px;
+top:58px;
+
+width:57px;
+height:62px;
+
+border-radius:
+    48% 48%
+    35% 35%;
+
+background:#87502d;
+
+border:3px solid #5f351b;
+
+}
+
+.ending-belly{
+position:absolute;
+
+left:7px;
+top:10px;
+
+width:37px;
+height:42px;
+
+border-radius:50%;
+
+background:#b9784b;
+
+}
+
+/* ARMS */
+
+.ending-arm{
+position:absolute;
+
+width:15px;
+height:52px;
+
+top:64px;
+
+border-radius:15px;
+
+background:#87502d;
+
+border:3px solid #60361c;
+
+}
+
+.ending-arm-left{
+left:5px;
+transform:rotate(22deg);
+}
+
+.ending-arm-right{
+right:5px;
+transform:rotate(-25deg);
+}
+
+/* LEGS */
+
+.ending-leg{
+position:absolute;
+
+width:16px;
+height:45px;
+
+top:105px;
+
+border-radius:15px;
+
+background:#87502d;
+
+border:3px solid #60361c;
+
+}
+
+.ending-leg-left{
+left:22px;
+}
+
+.ending-leg-right{
+right:22px;
+}
+
+/* TAIL */
+
+.ending-tail{
+position:absolute;
+
+width:75px;
+height:85px;
+
+right:-52px;
+top:57px;
+
+border:
+    9px solid #754321;
+
+border-left:0;
+border-bottom:0;
+
+border-radius:
+    0 70px 0 0;
+
+transform:rotate(15deg);
+
+}
+
+/* =====================================================
+PRESENTED COCONUT
+===================================================== */
+
+.presented-coconut{
+position:absolute;
+
+left:50%;
+top:58%;
+
+width:85px;
+height:105px;
+
+border-radius:
+    48% 48%
+    45% 45%;
+
+background:
+    radial-gradient(
+        circle at 30% 22%,
+        #c48647,
+        #75451f 38%,
+        #4a2813 72%,
+        #291508
+    );
+
+border:4px solid #321b0c;
+
+box-shadow:
+    inset 10px 10px 15px rgba(255,255,255,.14),
+    inset -12px -12px 20px rgba(0,0,0,.35),
+    0 15px 35px rgba(0,0,0,.4);
+
+z-index:100;
+
+opacity:0;
+
+transform:
+    translate(-50%,80px)
+    scale(.2);
+
+transition:none;
+
+}
+
+/* monkey presents coconut */
+
+
+@keyframes coconutPresent{
+
+0%{
+    opacity:0;
+
+    transform:
+        translate(-50%,100px)
+        scale(.2);
+}
+
+60%{
+    opacity:1;
+
+    transform:
+        translate(-50%,-10px)
+        scale(1.1);
+}
+
+100%{
+    opacity:1;
+
+    transform:
+        translate(-50%,0)
+        scale(1);
+}
+
+}
+
+/* dramatic zoom */
+
+.presented-coconut.zoom{
+
+animation:
+    coconutZoom 1.8s
+    cubic-bezier(.15,.8,.2,1)
+    forwards;
+
+}
+
+@keyframes coconutZoom{
+
+0%{
+    opacity:1;
+
+    transform:
+        translate(-50%,0)
+        scale(1);
+}
+
+40%{
+    transform:
+        translate(-50%,-20px)
+        scale(2);
+}
+
+75%{
+    transform:
+        translate(-50%,-30px)
+        scale(4);
+}
+
+100%{
+    opacity:0;
+
+    transform:
+        translate(-50%,-40px)
+        scale(7);
+}
+
+}
+
+.coconut-shine{
+position:absolute;
+
+width:24px;
+height:45px;
+
+left:18px;
+top:15px;
+
+border-radius:50%;
+
+background:
+    rgba(255,255,255,.15);
+
+transform:rotate(-30deg);
+
+}
+
+
+.presented-coconut.show{
+opacity:1;
+
+transform:
+    translate(-50%,0)
+    scale(1.8);
+
+}
+
+.presented-coconut.zoom{
+transform:
+translate(-50%,-15px)
+scale(4.5);
+}
+
+.coconut-shine{
+position:absolute;
+
+width:20px;
+height:35px;
+
+left:18px;
+top:15px;
+
+border-radius:50%;
+
+background:
+    rgba(255,255,255,.12);
+
+transform:rotate(-30deg);
+
+}
+
+/* =====================================================
+QUESTION
+===================================================== */
+
+.coconut-question{
+position:absolute;
+
+left:50%;
+top:50%;
+
+width:min(650px,90%);
+
+transform:
+    translate(-50%,-50%)
+    scale(.8);
+
+text-align:center;
+
+opacity:0;
+
+z-index:200;
+
+pointer-events:none;
+
+transition:
+    opacity 1s,
+    transform 1s;
+
+}
+
+.coconut-question.show{
+opacity:1;
+
+transform:
+    translate(-50%,-50%)
+    scale(1);
+
+pointer-events:auto;
+
+}
+
+.question-small{
+font-size:9px;
+
+letter-spacing:5px;
+
+color:#666;
+
+margin-bottom:20px;
+
+
+}
+
+.coconut-question h2{
+font-size:
+clamp(27px,5vw,58px);
+
+line-height:1.1;
+
+letter-spacing:5px;
+
+font-weight:900;
+
+text-shadow:
+    0 5px 25px rgba(0,0,0,.3);
+
+}
+
+.question-line{
+width:90px;
+
+height:2px;
+
+background:white;
+
+margin:25px auto;
+
+}
+
+.answer{
+font-size:
+clamp(18px,3vw,28px);
+
+font-weight:bold;
+
+letter-spacing:3px;
+
+}
+
+/* =====================================================
+TIME CARDS
+===================================================== */
+
+.time-card,
+.wasted-card{
+margin:20px auto 0;
+
+width:min(400px,90%);
+
+padding:18px;
+
+border-radius:10px;
+
+background:
+    rgba(0,0,0,.55);
+
+border:
+    1px solid rgba(255,255,255,.15);
+
+backdrop-filter:blur(8px);
+
+}
+
+.time-title,
+.wasted-title{
+color:#888;
+
+font-size:8px;
+
+letter-spacing:4px;
+
+}
+
+#totalTime,
+#wasted{
+margin-top:8px;
+
+font-size:
+    clamp(28px,5vw,45px);
+
+font-weight:900;
+
+letter-spacing:6px;
+
+}
+
+.wasted-card{
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,.12),
+rgba(255,255,255,.03)
+);
+}
+
+.wasted-title{
+color:#aaa;
+}
+
+#wasted{
+color:#fff;
+}
+
+/* FINAL MESSAGE */
+
+.final-congratulations{
+margin-top:18px;
+
+color:#777;
+
+font-size:8px;
+
+letter-spacing:3px;
+
+line-height:2;
+
+}
+
+/* RESTART */
+
+.restart{
+margin-top:22px;
+
+padding:13px 30px;
+
+border:1px solid #666;
+
+border-radius:4px;
+
+background:transparent;
+
+color:white;
+
+font-weight:bold;
+
+letter-spacing:3px;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.restart:hover{
+background:white;
+
+color:#111;
+
+transform:scale(1.04);
+
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+
+.ending-tree{
+    left:-25%;
+
+    transform:scale(.65);
+
+    transform-origin:bottom left;
+}
+
+.ending-monkey{
+    left:35%;
+    bottom:38%;
+}
+
+.presented-coconut.show{
+    transform:
+        translate(-50%,0)
+        scale(1.3);
+}
+
+.presented-coconut.zoom{
+    transform:
+        translate(-50%,-10px)
+        scale(3);
+}
+
+.coconut-question{
+    width:94%;
+}
+
+}
+
+/* =====================================================
+   CRASH
+===================================================== */
+
+#crash{
+    display:none;
+    position:absolute;
+    inset:0;
+    z-index:9999;
+    background:rgba(100,0,0,.85);
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+#crash.show{
+    display:flex;
+}
+
+.crash-box{
+    background:white;
+    color:#111;
+    padding:40px;
+    width:min(420px,90%);
+    border-radius:12px;
+    box-shadow:0 15px 50px rgba(0,0,0,.5);
+}
+
+.crash-box h1{
+    font-size:35px;
+    letter-spacing:5px;
+}
+
+.crash-box p{
+    margin-top:15px;
+    font-size:10px;
+    color:#555;
+    line-height:1.8;
+}
+
+.retry{
+    margin-top:25px;
+    padding:12px 30px;
+    border:0;
+    background:#111;
+    color:white;
+    cursor:pointer;
+    letter-spacing:3px;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width:700px){
+
+    .header{
+        padding:0 15px;
+    }
+
+    .logo{
+        font-size:17px;
+    }
+
+    .phase{
+        font-size:7px;
+    }
+
+    .instructions{
+        width:90%;
+    }
+
+    .instructions h2{
+        font-size:17px;
+    }
+
+    .tree{
+        transform:translateX(-50%) scale(.7);
+        transform-origin:bottom center;
+    }
+
+    .buildings .building{
+        min-width:45px;
+    }
+
+    .car{
+        transform:scale(.75);
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="game">
+
+<header class="header">
+    <div class="logo">NULLEX</div>
+    <div class="phase" id="phase">COCONUT EXTRACTION</div>
+</header>
+
+<!-- =====================================================
+     STAGE 1
+===================================================== -->
+
+<section class="scene active" id="treeScene">
+
+```
+<div class="sun"></div>
+
+<div class="cloud one"></div>
+<div class="cloud two"></div>
+
+<div class="instructions">
+    <small>PHASE 01 / COCONUT EXTRACTION</small>
+    <h2>GET THE COCONUT</h2>
+    <p>SELECT THE MONKEY</p>
+</div>
+
+<div class="grass"></div>
+
+<div class="flower" style="left:12%">🌼</div>
+<div class="flower" style="left:24%">🌸</div>
+<div class="flower" style="right:22%">🌼</div>
+<div class="flower" style="right:10%">🌻</div>
+
+<div class="tree">
+
+    <div class="trunk"></div>
+
+    <div class="crown">
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+    </div>
+
+    <div class="coconut co1"></div>
+    <div class="coconut co2"></div>
+    <div class="coconut co3"></div>
+    <div class="coconut co4"></div>
+    <div class="coconut co5"></div>
+    <div class="coconut co6"></div>
+    <div class="coconut co7"></div>
+    <div class="coconut co8"></div>
+    <div class="coconut co9"></div>
+
+    <div class="monkey" id="monkey"
+         style="left:170px;bottom:-5px">
+
+        <div class="tail"></div>
+
+        <div class="ear left"></div>
+        <div class="ear right"></div>
+
+        <div class="monkey-head">
+
+            <div class="monkey-face">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                <div class="nose"></div>
+                <div class="mouth"></div>
+            </div>
+
+        </div>
+
+        <div class="body">
+            <div class="belly"></div>
+        </div>
+
+        <div class="arm left"></div>
+        <div class="arm right"></div>
+
+        <div class="leg left"></div>
+        <div class="leg right"></div>
+
+    </div>
+
+</div>
+
+
+</section>
+
+<!-- =====================================================
+     STAGE 2
+===================================================== -->
+
+<section class="scene" id="trafficScene">
+
+<div class="city-sky"></div>
+
+<div class="instructions">
+    <small>PHASE 02 / URBAN SURVIVAL</small>
+    <h2>CROSS THE ROAD</h2>
+    <p>DON'T LET THE CARS HIT THE MONKEY</p>
+</div>
+
+<div class="buildings">
+
+    <div class="building">
+        <span class="window" style="left:15%;top:15%"></span>
+        <span class="window" style="left:55%;top:15%"></span>
+        <span class="window" style="left:15%;top:45%"></span>
+        <span class="window" style="left:55%;top:45%"></span>
+    </div>
+
+    <div class="building">
+        <span class="window" style="left:15%;top:15%"></span>
+        <span class="window" style="left:55%;top:15%"></span>
+        <span class="window" style="left:15%;top:40%"></span>
+        <span class="window" style="left:55%;top:40%"></span>
+        <span class="window" style="left:15%;top:65%"></span>
+        <span class="window" style="left:55%;top:65%"></span>
+    </div>
+
+    <div class="building">
+        <span class="window" style="left:15%;top:20%"></span>
+        <span class="window" style="left:55%;top:20%"></span>
+        <span class="window" style="left:15%;top:55%"></span>
+        <span class="window" style="left:55%;top:55%"></span>
+    </div>
+
+    <div class="building">
+        <span class="window" style="left:15%;top:12%"></span>
+        <span class="window" style="left:55%;top:12%"></span>
+        <span class="window" style="left:15%;top:38%"></span>
+        <span class="window" style="left:55%;top:38%"></span>
+        <span class="window" style="left:15%;top:64%"></span>
+        <span class="window" style="left:55%;top:64%"></span>
+    </div>
+
+    <div class="building">
+        <span class="window" style="left:15%;top:20%"></span>
+        <span class="window" style="left:55%;top:20%"></span>
+        <span class="window" style="left:15%;top:55%"></span>
+        <span class="window" style="left:55%;top:55%"></span>
+    </div>
+
+</div>
+
+<div class="traffic-light">
+    <div class="light red"></div>
+    <div class="light yellow"></div>
+    <div class="light green"></div>
+</div>
+
+<div class="sidewalk top"></div>
+
+<div class="road">
+
+    <div class="road-line one"></div>
+    <div class="road-line two"></div>
+
+    <div class="car red" id="car1" style="left:-130px;top:10%">
+        <div class="window w1"></div>
+        <div class="window w2"></div>
+    </div>
+
+    <div class="car blue" id="car2" style="left:110%;top:42%">
+        <div class="window w1"></div>
+        <div class="window w2"></div>
+    </div>
+
+    <div class="car yellow" id="car3" style="left:-200px;top:70%">
+        <div class="window w1"></div>
+        <div class="window w2"></div>
+    </div>
+
+    <div class="car green" id="car4" style="left:120%;top:55%">
+        <div class="window w1"></div>
+        <div class="window w2"></div>
+    </div>
+
+    <div class="car white" id="car5" style="left:-350px;top:30%">
+        <div class="window w1"></div>
+        <div class="window w2"></div>
+    </div>
+
+</div>
+
+<div class="sidewalk bottom"></div>
+
+<div class="road-monkey" id="roadMonkey"
+     style="left:5%;top:84%">
+
+    <div class="tail"></div>
+
+    <div class="ear left"></div>
+    <div class="ear right"></div>
+
+    <div class="monkey-head">
+        <div class="monkey-face">
+            <div class="eye left"></div>
+            <div class="eye right"></div>
+            <div class="nose"></div>
+            <div class="mouth"></div>
+        </div>
+    </div>
+
+    <div class="body">
+        <div class="belly"></div>
+    </div>
+
+    <div class="carried-coconut"></div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     STAGE 3
+===================================================== -->
+
+<section class="scene" id="shakeScene">
+
+<div class="instructions">
+    <small>PHASE 03 / COCONUT DESTABILIZATION</small>
+    <h2>SHAKE THE COCONUT</h2>
+    <p>CLICK IT 25 TIMES</p>
+</div>
+
+<div class="shake-content">
+
+    <div class="big-coconut" id="bigCoconut"></div>
+
+    <div class="shake-count">
+        SHAKES:
+        <span id="shakeCount">0</span>
+        / 25
+    </div>
+
+    <div class="progress">
+        <div class="progress-fill" id="progress"></div>
+    </div>
+
+    <div class="shake-help">
+        KEEP CLICKING. THIS IS IMPORTANT FOR SOME REASON.
+    </div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     FINAL REVEAL
+===================================================== -->
+
+<section class="scene" id="revealScene">
+
+<!-- FIRST SCREEN -->
+
+<div class="final-start" id="finalStart">
+
+    <div class="final-glow"></div>
+
+    <div class="final-small">
+        NULLEX HAS SUCCESSFULLY REACHED THE END
+    </div>
+
+    <h1>YOU MADE IT.</h1>
+
+    <p>
+        YOU SURVIVED THE TREE.<br>
+        YOU SURVIVED THE ROAD.<br>
+        YOU SURVIVED THE COCONUT.
+    </p>
+
+    <button id="letsGoButton">
+        LETS GO →
+    </button>
+
+</div>
+
+
+<!-- CINEMATIC COCONUT SCENE -->
+
+<div class="coconut-ending" id="coconutEnding">
+
+    <div class="ending-sky"></div>
+
+    <div class="ending-sun"></div>
+
+    <div class="ending-cloud cloud-a"></div>
+    <div class="ending-cloud cloud-b"></div>
+
+    <div class="ending-ground"></div>
+
+
+    <!-- TREE -->
+
+    <div class="ending-tree">
+
+        <div class="ending-trunk"></div>
+
+        <div class="ending-leaf leaf-a"></div>
+        <div class="ending-leaf leaf-b"></div>
+        <div class="ending-leaf leaf-c"></div>
+        <div class="ending-leaf leaf-d"></div>
+        <div class="ending-leaf leaf-e"></div>
+        <div class="ending-leaf leaf-f"></div>
+
+        <div class="ending-coconut coconut-tree-one"></div>
+        <div class="ending-coconut coconut-tree-two"></div>
+        <div class="ending-coconut coconut-tree-three"></div>
+
+    </div>
+
+
+    <!-- MONKEY -->
+
+    <div class="ending-monkey" id="endingMonkey">
+
+        <div class="ending-tail"></div>
+
+        <div class="ending-ear ending-ear-left"></div>
+        <div class="ending-ear ending-ear-right"></div>
+
+        <div class="ending-head">
+
+            <div class="ending-face">
+
+                <div class="ending-eye ending-eye-left"></div>
+                <div class="ending-eye ending-eye-right"></div>
+
+                <div class="ending-nose"></div>
+
+                <div class="ending-mouth"></div>
+
+            </div>
+
+        </div>
+
+        <div class="ending-body">
+            <div class="ending-belly"></div>
+        </div>
+
+        <div class="ending-arm ending-arm-left"></div>
+        <div class="ending-arm ending-arm-right"></div>
+
+        <div class="ending-leg ending-leg-left"></div>
+        <div class="ending-leg ending-leg-right"></div>
+
+    </div>
+
+
+    <!-- COCONUT BEING PRESENTED -->
+
+    <div class="presented-coconut" id="presentedCoconut">
+
+        <div class="coconut-shine"></div>
+
+    </div>
+
+
+    <!-- QUESTION -->
+
+    <div class="coconut-question" id="coconutQuestion">
+
+        <div class="question-small">
+            NULLEX FINAL QUESTION
+        </div>
+
+        <h3>
+            FOR WHAT COCONUT DID YOU ENTER THIS SITE?
+        </h3>
+
+        <div class="question-line"></div>
+
+        <div class="answer">
+            FOR THIS COCONUT. 🥥
+        </div>
+
+
+        <div class="time-card">
+
+            <div class="time-title">
+                TIME SPENT ON THIS SITE
+            </div>
+
+            <div id="totalTime">
+                00:00
+            </div>
+
+        </div>
+
+
+        <div class="wasted-card">
+
+            <div class="wasted-title">
+                SUCCESSFULLY WASTED THIS TIME
+            </div>
+
+            <div id="wasted">
+                00:00
+            </div>
+
+        </div>
+
+
+        <div class="final-congratulations">
+            CONGRATULATIONS.<br>
+            YOU COMPLETED ABSOLUTELY NOTHING.
+        </div>
+    
+
+        <button class="restart" id="restart">
+            RESTART NULLEX ↻
+        </button>
+
+    </div>
+
+</div>
+
+</section>
+
+<!-- =====================================================
+     CRASH
+===================================================== -->
+
+<div id="crash">
+
+```
+<div class="crash-box">
+
+    <h1>💥 CRASHED</h1>
+
+    <p>
+        THE MONKEY WAS HIT BY A VEHICLE.<br>
+        THE COCONUT SURVIVED.
+    </p>
+
+    <button class="retry" id="retry">
+        TRY AGAIN
+    </button>
+
+</div>
+```
+
+</div>
+
+</div>
+
+<script>
+
+/* =====================================================
+   SETUP
+===================================================== */
+
+const treeScene =
+    document.getElementById("treeScene");
+
+const trafficScene =
+    document.getElementById("trafficScene");
+
+const shakeScene =
+    document.getElementById("shakeScene");
+
+const revealScene =
+    document.getElementById("revealScene");
+
+const phase =
+    document.getElementById("phase");
+
+let startTime =
+    Number(localStorage.getItem("nullexStartTime"));
+
+if(!startTime){
+
+    startTime = Date.now();
+
+    localStorage.setItem(
+        "nullexStartTime",
+        startTime
+    );
+
+}
+
+
+/* =====================================================
+   CHANGE SCENE
+===================================================== */
+
+function changeScene(scene){
+
+    document.querySelectorAll(".scene")
+        .forEach(s => s.classList.remove("active"));
+
+    scene.classList.add("active");
+
+}
+
+
+/* =====================================================
+   TREE
+===================================================== */
+
+const monkey =
+    document.getElementById("monkey");
+
+const coconuts =
+    document.querySelectorAll(".coconut");
+
+let monkeySelected = false;
+let coconutTaken = false;
+
+monkey.addEventListener("click",function(){
+
+    if(monkeySelected)
+        return;
+
+    monkeySelected = true;
+
+    monkey.classList.add("selected");
+
+    phase.textContent =
+        "MONKEY SELECTED";
+
+    setTimeout(function(){
+
+        monkey.style.left = "178px";
+        monkey.style.bottom = "245px";
+
+    },300);
+
+    setTimeout(function(){
+
+        phase.textContent =
+            "SELECT A COCONUT";
+
+    },1200);
+
+});
+
+
+coconuts.forEach(function(coconut){
+
+    coconut.addEventListener("click",function(){
+
+        if(!monkeySelected || coconutTaken)
+            return;
+
+        coconutTaken = true;
+
+        coconut.classList.add("taken");
+
+        phase.textContent =
+            "COCONUT ACQUIRED";
+
+        /* monkey reaches coconut */
+
+        monkey.style.left = "205px";
+        monkey.style.bottom = "255px";
+
+        setTimeout(function(){
+
+            monkey.style.left = "178px";
+            monkey.style.bottom = "5px";
+
+            phase.textContent =
+                "RETURNING TO GROUND";
+
+        },900);
+
+        setTimeout(function(){
+
+            startTraffic();
+
+        },2200);
+
+    });
+
+});
+
+
+/* =====================================================
+   TRAFFIC
+===================================================== */
+
+const roadMonkey =
+    document.getElementById("roadMonkey");
+
+const crash =
+    document.getElementById("crash");
+
+const cars = [
+    document.getElementById("car1"),
+    document.getElementById("car2"),
+    document.getElementById("car3"),
+    document.getElementById("car4"),
+    document.getElementById("car5")
+];
+
+let monkeyX = 5;
+let monkeyY = 84;
+
+let trafficRunning = false;
+let trafficFrame;
+
+
+/* car positions */
+
+let carPositions = [
+    -15,
+    110,
+    -25,
+    120,
+    -35
+];
+
+let carSpeeds = [
+    .35,
+    .42,
+    .3,
+    .5,
+    .27
+];
+
+
+function startTraffic(){
+
+    changeScene(trafficScene);
+
+    phase.textContent =
+        "CROSS THE TRAFFIC";
+
+    monkeyX = 5;
+    monkeyY = 84;
+
+    roadMonkey.style.left =
+        monkeyX + "%";
+
+    roadMonkey.style.top =
+        monkeyY + "%";
+
+    trafficRunning = true;
+
+    carPositions = [
+        -15,
+        110,
+        -25,
+        120,
+        -35
+    ];
+
+    runTraffic();
+
+}
+
+
+function runTraffic(){
+
+    if(!trafficRunning)
+        return;
+
+    cars.forEach(function(car,index){
+
+        if(index % 2 === 0){
+
+            carPositions[index] +=
+                carSpeeds[index];
+
+            if(carPositions[index] > 110)
+                carPositions[index] = -20;
+
+        }else{
+
+            carPositions[index] -=
+                carSpeeds[index];
+
+            if(carPositions[index] < -20)
+                carPositions[index] = 110;
+
+        }
+
+        car.style.left =
+            carPositions[index] + "%";
+
+    });
+
+    checkCollision();
+
+    trafficFrame =
+        requestAnimationFrame(runTraffic);
+
+}
+
+
+/* =====================================================
+   MONKEY MOVEMENT
+===================================================== */
+
+document.addEventListener("keydown",function(event){
+
+    if(!trafficRunning)
+        return;
+
+    const key =
+        event.key.toLowerCase();
+
+    const step = 2.8;
+
+    if(
+        key === "arrowup" ||
+        key === "w"
+    ){
+        monkeyY -= step;
+    }
+
+    if(
+        key === "arrowdown" ||
+        key === "s"
+    ){
+        monkeyY += step;
+    }
+
+    if(
+        key === "arrowleft" ||
+        key === "a"
+    ){
+        monkeyX -= step;
+    }
+
+    if(
+        key === "arrowright" ||
+        key === "d"
+    ){
+        monkeyX += step;
+    }
+
+    monkeyX =
+        Math.max(1,Math.min(94,monkeyX));
+
+    monkeyY =
+        Math.max(51,Math.min(88,monkeyY));
+
+    roadMonkey.style.left =
+        monkeyX + "%";
+
+    roadMonkey.style.top =
+        monkeyY + "%";
+
+    if(monkeyY <= 52){
+
+        trafficRunning = false;
+
+        cancelAnimationFrame(
+            trafficFrame
+        );
+
+        setTimeout(
+            startShake,
+            700
+        );
+
+    }
+
+});
+
+
+/* =====================================================
+   COLLISION
+===================================================== */
+
+function checkCollision(){
+
+    const monkeyRect =
+        roadMonkey.getBoundingClientRect();
+
+    cars.forEach(function(car){
+
+        const carRect =
+            car.getBoundingClientRect();
+
+        const hit =
+            monkeyRect.left < carRect.right &&
+            monkeyRect.right > carRect.left &&
+            monkeyRect.top < carRect.bottom &&
+            monkeyRect.bottom > carRect.top;
+
+        if(hit){
+
+            trafficRunning = false;
+
+            cancelAnimationFrame(
+                trafficFrame
+            );
+
+            crash.classList.add("show");
+
+        }
+
+    });
+
+}
+
+
+/* retry */
+
+document.getElementById("retry")
+.addEventListener("click",function(){
+
+    crash.classList.remove("show");
+
+    startTraffic();
+
+});
+
+
+/* =====================================================
+   SHAKE
+===================================================== */
+
+const bigCoconut =
+    document.getElementById("bigCoconut");
+
+const shakeCount =
+    document.getElementById("shakeCount");
+
+const progress =
+    document.getElementById("progress");
+
+let shakes = 0;
+
+
+function startShake(){
+
+    changeScene(shakeScene);
+
+    phase.textContent =
+         "SHAKE THE COCONUT";
+
+    shakes = 0;
+
+    shakeCount.textContent =
+        "0";
+
+    progress.style.width =
+        "0%";
+
+}
+
+
+bigCoconut.addEventListener("click",function(){
+
+    shakes++;
+
+    shakeCount.textContent =
+        shakes;
+
+    progress.style.width =
+        (shakes / 25 * 100) + "%";
+
+    bigCoconut.classList.add(
+        "shaking"
+    );
+
+    setTimeout(function(){
+
+        bigCoconut.classList.remove(
+            "shaking"
+        );
+
+    },100);
+
+    if(shakes >= 25){
+
+        setTimeout(
+            showReveal,
+            600
+        );
+
+    }
+
+});
+
+
+/* =====================================================
+   REVEAL
+===================================================== */
+
+function showReveal(){
+
+    changeScene(revealScene);
+
+    phase.textContent =
+        "MISSION COMPLETE";
+
+    updateTime();
+
+}
+
+
+function updateTime(){
+
+    const elapsed =
+        Math.floor(
+            (Date.now() - startTime) / 1000
+        );
+
+    const minutes =
+        Math.floor(elapsed / 60);
+
+    const seconds =
+        elapsed % 60;
+
+    document.getElementById(
+        "wasted"
+    ).textContent =
+        String(minutes).padStart(2,"0")
+        + ":" +
+        String(seconds).padStart(2,"0");
+
+}
+
+
+setInterval(function(){
+
+    if(
+        revealScene.classList.contains(
+            "active"
+        )
+    ){
+
+        updateTime();
+
+    }
+
+},1000);
+
+/* =====================================================
+   LETS GO — FINAL COCONUT CINEMATIC
+===================================================== */
+
+const letsGoButton =
+    document.getElementById("letsGoButton");
+
+const finalStart =
+    document.getElementById("finalStart");
+
+const coconutEnding =
+    document.getElementById("coconutEnding");
+
+const endingMonkey =
+    document.getElementById("endingMonkey");
+
+const presentedCoconut =
+    document.getElementById("presentedCoconut");
+
+const coconutQuestion =
+    document.getElementById("coconutQuestion");
+
+
+let finalSequenceStarted = false;
+
+
+letsGoButton.addEventListener("click", function(){
+
+    /* Prevent double clicking */
+    if(finalSequenceStarted){
+        return;
+    }
+
+    finalSequenceStarted = true;
+
+    /* Hide the YOU MADE IT screen */
+    finalStart.classList.add("hide");
+
+    phase.textContent =
+        "PREPARING FINAL COCONUT...";
+
+
+    /* Show the tropical ending scene */
+    setTimeout(function(){
+
+        coconutEnding.classList.add("active");
+
+        phase.textContent =
+            "SOMETHING IS COMING...";
+
+    },700);
+
+
+    /* Monkey jumps in from the side */
+    setTimeout(function(){
+
+        endingMonkey.classList.add("jump");
+
+        phase.textContent =
+            "UNEXPECTED MONKEY DELIVERY";
+
+    },1200);
+
+
+    /* Monkey reaches the middle */
+    setTimeout(function(){
+
+        phase.textContent =
+            "THE MONKEY HAS SOMETHING FOR YOU";
+
+    },3000);
+
+
+    /* Coconut appears */
+    setTimeout(function(){
+
+        presentedCoconut.classList.add("show");
+
+        phase.textContent =
+            "PLEASE ACCEPT THIS COCONUT";
+
+    },3400);
+
+
+    /* Wait, then zoom the coconut */
+    setTimeout(function(){
+
+        phase.textContent =
+            "COCONUT DETECTED";
+
+        presentedCoconut.classList.remove("show");
+
+        /*
+         * Force browser to restart the animation
+         */
+        void presentedCoconut.offsetWidth;
+
+        presentedCoconut.classList.add("show");
+        presentedCoconut.classList.add("zoom");
+
+    },5200);
+
+
+    /* Final question */
+    setTimeout(function(){
+
+        coconutQuestion.classList.add("show");
+
+        phase.textContent =
+            "FINAL QUESTION";
+
+        updateFinalTime();
+
+    },7300);
+
+});
+
+
+/* =====================================================
+   FINAL TIME
+===================================================== */
+
+function formatFinalTime(totalSeconds){
+
+    const hours =
+        Math.floor(totalSeconds / 3600);
+
+    const minutes =
+        Math.floor(
+            (totalSeconds % 3600) / 60
+        );
+
+    const seconds =
+        totalSeconds % 60;
+
+
+    if(hours > 0){
+
+        return (
+            String(hours).padStart(2,"0")
+            + ":"
+            +
+            String(minutes).padStart(2,"0")
+            + ":"
+            +
+            String(seconds).padStart(2,"0")
+        );
+
+    }
+
+
+    return (
+        String(minutes).padStart(2,"0")
+        + ":"
+        +
+        String(seconds).padStart(2,"0")
+    );
+
+}
+
+
+function updateFinalTime(){
+
+    const elapsed =
+        Math.floor(
+            (Date.now() - startTime) / 1000
+        );
+
+    const formatted =
+        formatFinalTime(elapsed);
+
+
+    const totalTime =
+        document.getElementById("totalTime");
+
+    const wasted =
+        document.getElementById("wasted");
+
+
+    if(totalTime){
+
+        totalTime.textContent =
+            formatted;
+
+    }
+
+
+    if(wasted){
+
+        wasted.textContent =
+            formatted;
+
+    }
+
+}
+/* =====================================================
+   RESTART
+===================================================== */
+
+document.getElementById("restart")
+.addEventListener("click",function(){
+
+    localStorage.removeItem(
+        "nullexStartTime"
+    );
+
+    localStorage.removeItem(
+        "nullexLoggedIn"
+    );
+
+    window.location.href =
+        "index.html";
+
+});
+
+</script>
+
+</body>
+</html>
